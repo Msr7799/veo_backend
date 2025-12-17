@@ -1,0 +1,333 @@
+{
+  "_description": "Android-friendly JSON request/response examples for Veo Video Generation API with Firebase Authentication",
+  "_authentication": "All requests require Firebase ID Token in Authorization header: Bearer <FIREBASE_ID_TOKEN>",
+
+  "text_to_video": {
+    "request": {
+      "method": "POST",
+      "url": "/v1/video/text",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer <FIREBASE_ID_TOKEN>"
+      },
+      "body": {
+        "prompt": "A golden retriever running through a sunlit meadow, cinematic slow motion",
+        "durationSeconds": 6,
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "cameraStyle": "cinematic",
+        "motionLevel": "medium",
+        "lighting": "natural",
+        "quality": "high",
+        "seed": 12345,
+        "negativePrompt": "blurry, distorted, low quality",
+        "generateAudio": true
+      }
+    },
+    "response_pending": {
+      "success": true,
+      "data": {
+        "jobId": "550e8400-e29b-41d4-a716-446655440000",
+        "status": "PENDING",
+        "mode": "TEXT_TO_VIDEO",
+        "message": "Video generation started. Poll /v1/video/status/:jobId for updates.",
+        "quota": {
+          "used": 1,
+          "limit": 50,
+          "remaining": 49
+        }
+      }
+    }
+  },
+
+  "text_to_video_minimal": {
+    "request": {
+      "method": "POST",
+      "url": "/v1/video/text",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer <FIREBASE_ID_TOKEN>"
+      },
+      "body": {
+        "prompt": "Ocean waves crashing on a rocky shore at sunset"
+      }
+    },
+    "response_pending": {
+      "success": true,
+      "data": {
+        "jobId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+        "status": "PENDING",
+        "mode": "TEXT_TO_VIDEO",
+        "message": "Video generation started. Poll /v1/video/status/:jobId for updates.",
+        "quota": {
+          "used": 2,
+          "limit": 50,
+          "remaining": 48
+        }
+      }
+    }
+  },
+
+  "text_to_video_vertical": {
+    "_description": "Vertical video for TikTok/Reels/Shorts",
+    "request": {
+      "method": "POST",
+      "url": "/v1/video/text",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer <FIREBASE_ID_TOKEN>"
+      },
+      "body": {
+        "prompt": "A person walking through a neon-lit city street at night",
+        "durationSeconds": 8,
+        "aspectRatio": "9:16",
+        "cameraStyle": "handheld",
+        "lighting": "dramatic"
+      }
+    }
+  },
+
+  "image_to_video": {
+    "request": {
+      "method": "POST",
+      "url": "/v1/video/image",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer <FIREBASE_ID_TOKEN>"
+      },
+      "body": {
+        "prompt": "The person in the image starts dancing gracefully",
+        "imageBase64": "<base64-encoded-image-data>",
+        "imageMimeType": "image/png",
+        "durationSeconds": 4,
+        "aspectRatio": "16:9",
+        "quality": "high"
+      }
+    },
+    "response_pending": {
+      "success": true,
+      "data": {
+        "jobId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        "status": "PENDING",
+        "mode": "IMAGE_TO_VIDEO",
+        "message": "Video generation started. Poll /v1/video/status/:jobId for updates.",
+        "quota": {
+          "used": 3,
+          "limit": 50,
+          "remaining": 47
+        }
+      }
+    }
+  },
+
+  "job_status_pending": {
+    "request": {
+      "method": "GET",
+      "url": "/v1/video/status/550e8400-e29b-41d4-a716-446655440000",
+      "headers": {
+        "Authorization": "Bearer <FIREBASE_ID_TOKEN>"
+      }
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "jobId": "550e8400-e29b-41d4-a716-446655440000",
+        "status": "PENDING",
+        "mode": "TEXT_TO_VIDEO",
+        "createdAt": "2024-01-15T10:30:00.000Z"
+      }
+    }
+  },
+
+  "job_status_processing": {
+    "response": {
+      "success": true,
+      "data": {
+        "jobId": "550e8400-e29b-41d4-a716-446655440000",
+        "status": "PROCESSING",
+        "mode": "TEXT_TO_VIDEO",
+        "createdAt": "2024-01-15T10:30:00.000Z"
+      }
+    }
+  },
+
+  "job_status_completed": {
+    "_description": "When completed, use signedUrl to download video, then upload to your own storage (Cloudinary/Firebase Storage)",
+    "response": {
+      "success": true,
+      "data": {
+        "jobId": "550e8400-e29b-41d4-a716-446655440000",
+        "status": "COMPLETED",
+        "mode": "TEXT_TO_VIDEO",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "completedAt": "2024-01-15T10:32:30.000Z",
+        "result": {
+          "videoUri": "gs://your-bucket/videos/550e8400-e29b-41d4-a716-446655440000.mp4",
+          "signedUrl": "https://storage.googleapis.com/your-bucket/videos/550e8400-e29b-41d4-a716-446655440000.mp4?X-Goog-Algorithm=...",
+          "expiresAt": "2024-01-15T11:32:30.000Z"
+        }
+      }
+    }
+  },
+
+  "job_status_failed": {
+    "response": {
+      "success": true,
+      "data": {
+        "jobId": "550e8400-e29b-41d4-a716-446655440000",
+        "status": "FAILED",
+        "mode": "TEXT_TO_VIDEO",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "completedAt": "2024-01-15T10:31:00.000Z",
+        "error": "Video generation failed due to content policy violation"
+      }
+    }
+  },
+
+  "supported_modes": {
+    "request": {
+      "method": "GET",
+      "url": "/v1/video/modes",
+      "headers": {
+        "Authorization": "Bearer <FIREBASE_ID_TOKEN>"
+      }
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "supportedModes": ["TEXT_TO_VIDEO", "IMAGE_TO_VIDEO"],
+        "parameters": {
+          "durationSeconds": {
+            "allowed": [4, 6, 8],
+            "default": 5
+          },
+          "aspectRatio": {
+            "allowed": ["16:9", "9:16", "1:1"],
+            "default": "16:9"
+          },
+          "fps": {
+            "allowed": [24, 30],
+            "default": 24
+          },
+          "cameraStyle": {
+            "allowed": ["cinematic", "handheld", "documentary"]
+          },
+          "motionLevel": {
+            "allowed": ["low", "medium", "high"]
+          },
+          "lighting": {
+            "allowed": ["natural", "dramatic", "soft"]
+          },
+          "quality": {
+            "allowed": ["standard", "high"],
+            "default": "standard"
+          }
+        }
+      }
+    }
+  },
+
+  "health_check": {
+    "_description": "Health check does NOT require authentication",
+    "request": {
+      "method": "GET",
+      "url": "/v1/health"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "status": "healthy",
+        "timestamp": "2024-01-15T10:30:00.000Z",
+        "version": "1.0.0",
+        "environment": "production",
+        "region": "us-central1"
+      }
+    }
+  },
+
+  "errors": {
+    "authentication_missing": {
+      "success": false,
+      "error": {
+        "code": "AUTHENTICATION_ERROR",
+        "message": "Authorization header is required"
+      }
+    },
+    "authentication_invalid_format": {
+      "success": false,
+      "error": {
+        "code": "AUTHENTICATION_ERROR",
+        "message": "Invalid Authorization header format. Expected: Bearer <token>"
+      }
+    },
+    "authentication_token_expired": {
+      "success": false,
+      "error": {
+        "code": "AUTHENTICATION_ERROR",
+        "message": "Token has expired. Please sign in again."
+      }
+    },
+    "authentication_token_invalid": {
+      "success": false,
+      "error": {
+        "code": "AUTHENTICATION_ERROR",
+        "message": "Invalid or expired authentication token."
+      }
+    },
+    "quota_exceeded": {
+      "success": false,
+      "error": {
+        "code": "QUOTA_EXCEEDED",
+        "message": "Daily video generation quota exceeded. Limit: 50 videos per day."
+      }
+    },
+    "validation_error": {
+      "success": false,
+      "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Validation failed",
+        "details": [
+          {
+            "field": "prompt",
+            "message": "Prompt is required",
+            "value": ""
+          }
+        ]
+      }
+    },
+    "rate_limit_error": {
+      "success": false,
+      "error": {
+        "code": "RATE_LIMIT_EXCEEDED",
+        "message": "Too many requests, please try again later"
+      }
+    },
+    "not_found_error": {
+      "success": false,
+      "error": {
+        "code": "NOT_FOUND",
+        "message": "Job 550e8400-e29b-41d4-a716-446655440000 not found"
+      }
+    },
+    "unsupported_mode_error": {
+      "success": false,
+      "error": {
+        "code": "UNSUPPORTED_MODE",
+        "message": "Video generation mode 'VIDEO_TO_VIDEO' is not supported"
+      }
+    }
+  },
+
+  "android_workflow": {
+    "_description": "Complete workflow for Android app",
+    "steps": [
+      "1. User signs in with Google via Firebase Auth in Android app",
+      "2. Get Firebase ID Token: FirebaseAuth.getInstance().currentUser?.getIdToken(false)",
+      "3. Send video generation request with token in Authorization header",
+      "4. Receive jobId, poll /v1/video/status/:jobId until COMPLETED",
+      "5. Download video from signedUrl (expires in 1 hour)",
+      "6. Upload video to your storage (Cloudinary/Firebase Storage)",
+      "7. Save final URL to Firestore for user's gallery"
+    ]
+  }
+}
