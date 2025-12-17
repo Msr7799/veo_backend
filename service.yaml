@@ -11,21 +11,21 @@ spec:
       annotations:
         run.googleapis.com/startup-cpu-boost: true
     spec:
-      serviceAccountName: veo-backend-sa@chat-ui-e1c11.iam.gserviceaccount.com
+      serviceAccountName: YOUR_SERVICE_ACCOUNT_EMAIL
       timeoutSeconds: 300
       containerConcurrency: 80
       containers:
-      - image: us-central1-docker.pkg.dev/chat-ui-e1c11/cloud-run-source-deploy/veo-backend:latest
+      - image: us-central1-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_ARTIFACT_REPO/veo-backend:latest
         ports:
         - name: http1
           containerPort: 8080
         env:
         - name: GCP_PROJECT_ID
-          value: chat-ui-e1c11
+          value: your-project-id
         - name: GCP_REGION
           value: us-central1
         - name: FIREBASE_PROJECT_ID
-          value: chat-ui-e1c11
+          value: your-firebase-project-id
         - name: VEO_MODEL_ID
           value: veo-3.1
         - name: VEO_ENABLE_IMAGE_TO_VIDEO
@@ -41,9 +41,7 @@ spec:
         - name: VEO_FORWARD_RESOLUTION
           value: "false"
         - name: GCS_BUCKET_NAME
-          value: chat-ui-e1c11-veo-videos
-        - name: PORT
-          value: "8080"
+          value: your-bucket-name
         - name: NODE_ENV
           value: production
         - name: RATE_LIMIT_WINDOW_MS
@@ -55,21 +53,22 @@ spec:
         - name: ENABLE_PERIODIC_CLEANUP
           value: "false"
         - name: YOUTUBE_CLIENT_ID
-          value: 347302193342-7gl9f4tku2mmj2t3tr9u7o51j6g78djt.apps.googleusercontent.com
+          value: "__SET_IN_CLOUD_RUN__"
         - name: YOUTUBE_CLIENT_SECRET
-          value: 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
+          value: "__SET_IN_CLOUD_RUN__"
         - name: YOUTUBE_REDIRECT_URI
-          value: https://veo-backend-347302193342.us-central1.run.app/oauth/youtube/callback
+          value: "__SET_IN_CLOUD_RUN__"
         resources:
           limits:
             cpu: 1000m
             memory: 1Gi
         startupProbe:
-          tcpSocket:
+          httpGet:
+            path: /v1/health/ready
             port: 8080
-          timeoutSeconds: 240
-          periodSeconds: 240
-          failureThreshold: 1
+          timeoutSeconds: 4
+          periodSeconds: 5
+          failureThreshold: 60
   traffic:
   - percent: 100
     latestRevision: true
